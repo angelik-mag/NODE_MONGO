@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  node_app:
+   container_name: app_node
+   restart: always
+   build: .
+   ports:
+     - "5000:3000"
+   links:
+     - mongo_data
+   depends_on:
+     - mongo_data
+
+
+  mongo_data:
+    container_name: db_mongo 
+    image: mongo:5.0.13
+    ports:
+     - "27018:27017"
+
+
+  mongo_seed:
+    image: mongo:5.0.13 
+    links:
+      - mongo_data
+    volumes:
+     - ./src/data_export:/data/db
+    command: 
+     /data/db/import.sh
+ 
